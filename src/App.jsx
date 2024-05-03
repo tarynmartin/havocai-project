@@ -1,23 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import * as React from 'react';
+import Map from 'react-map-gl';
 
 const App = () => {
-  const [count, setCount] = useState(0)
   return (
-    <>
-      <div>
-        <h1>Practice</h1>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-    </>
-  )
+    <div className='app.'>
+      <Map
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_KEY}
+        initialViewState={{
+          longitude: -91.874,
+          latitude: 42.76,
+          zoom: 12
+        }}
+        style={{width: '100vw', height: '100vh' }}
+        mapStyle="mapbox://styles/mapbox/satellite-v9"
+        onRender={(e) => e.target.resize()}
+    />
+    </div>
+  );
 }
 
 export default App

@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.app {
+  display: flex;
+  flex-grow: 1;
+  max-width: 100%;
+  max-height: 100%;
+}
