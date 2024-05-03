@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Map from 'react-map-gl';
+import SpeedDial from './components/SpeedDial/SpeedDial.jsx';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         mapStyle="mapbox://styles/mapbox/satellite-v9"
         onRender={(e) => e.target.resize()}
     />
+    <SpeedDial />
     </div>
   );
 }
