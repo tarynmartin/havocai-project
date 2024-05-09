@@ -1,6 +1,6 @@
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { useControl } from 'react-map-gl';
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useCallback } from 'react';
 import NewUseControl from './NewUseControl';
 
 // styles
@@ -9,27 +9,12 @@ import { GeoFencesStyles } from './GeoFence.styles';
 import { TerminalAreasStyles } from './TerminalArea.styles';
 // import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
-const DrawControl = memo(function DrawControl(props) {
-  // currentAction for selection
-  console.log('props', props.currentAction, props)
-  const drawStyle = useMemo(() => {
-    console.log('inside', props.currentAction)
-    switch (props.currentAction) {
-      case 'Avoid Zone':
-        return AvoidZonesStyles;
-      case 'Geo Fence':
-        return GeoFencesStyles;
-      case 'Terminal Area':
-      default:
-        return TerminalAreasStyles
-    }
-  }, [props.currentAction]);
-
-  console.log('memo', drawStyle[0].paint['line-color'])
-  
-  // const
+const DrawControl = (props) => {
   useControl(
-    () => new MapboxDraw({...{ styles: drawStyle, userProperties: true }, ...props}),
+    () => {
+      console.log('useControl');
+      return new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props})
+    },
     ({map}) => {
       map.on('draw.create', props.onCreate);
       map.on('draw.update', props.onUpdate);
@@ -46,6 +31,12 @@ const DrawControl = memo(function DrawControl(props) {
   );
 
   return null;
-});
+  // return (
+  //   <NewUseControl
+  //     drawStyle={drawStyle}
+  //     props={props}
+  //   />
+  // );
+};
 
 export default DrawControl;

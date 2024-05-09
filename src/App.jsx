@@ -4,6 +4,9 @@ import SpeedDial from './components/SpeedDial/SpeedDial.jsx';
 import DrawControl from './components/DrawControl/DrawControl.js';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
+import { AvoidZonesStyles } from './components/DrawControl/AvoidZone.styles.js';
+import { GeoFencesStyles } from './components/DrawControl/GeoFence.styles.js';
+
 const App = () => {
   const [action, setAction] = useState(null);
   const [features, setFeatures] = useState({});
@@ -43,8 +46,8 @@ const App = () => {
         mapStyle="mapbox://styles/mapbox/satellite-v9"
         onRender={(e) => e.target.resize()}
     >
-      {/* when switching actions, should auto select draw option */}
-      <DrawControl position="top-left"
+      {action === 'Avoid Zone' && <DrawControl
+        position="top-left"
         displayControlsDefault={false}
         controls={{
           polygon: true,
@@ -54,8 +57,21 @@ const App = () => {
         onCreate={onUpdate}
         onUpdate={onUpdate}
         onDelete={onDelete}
-        currentAction={action}
-      />
+        currentStyle={AvoidZonesStyles} />
+      }
+      {action === 'Geo Fence' && <DrawControl
+        position="top-left"
+        displayControlsDefault={false}
+        controls={{
+          polygon: true,
+          trash: true
+        }}
+        defaultMode="draw_polygon"
+        onCreate={onUpdate}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+        currentStyle={GeoFencesStyles}
+      /> }
     </Map>
     <SpeedDial setChoice={setAction} />
     </div>
