@@ -6,6 +6,7 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
 import { AvoidZonesStyles } from './components/DrawControl/AvoidZone.styles.js';
 import { GeoFencesStyles } from './components/DrawControl/GeoFence.styles.js';
+import { TerminalAreasStyles } from './components/DrawControl/TerminalArea.styles.js';
 
 const App = () => {
   const [action, setAction] = useState(null);
@@ -14,7 +15,6 @@ const App = () => {
   const onUpdate = useCallback(e => {
     setFeatures(currFeatures => {
       const newFeatures = {...currFeatures};
-      console.log('features', e.features)
 
       for (const f of e.features) {
         newFeatures[f.id] = f;
@@ -47,30 +47,22 @@ const App = () => {
         onRender={(e) => e.target.resize()}
     >
       {action === 'Avoid Zone' && <DrawControl
-        position="top-left"
-        displayControlsDefault={false}
-        controls={{
-          polygon: true,
-          trash: true
-        }}
-        defaultMode="draw_polygon"
         onCreate={onUpdate}
         onUpdate={onUpdate}
         onDelete={onDelete}
         currentStyle={AvoidZonesStyles} />
       }
       {action === 'Geo Fence' && <DrawControl
-        position="top-left"
-        displayControlsDefault={false}
-        controls={{
-          polygon: true,
-          trash: true
-        }}
-        defaultMode="draw_polygon"
         onCreate={onUpdate}
         onUpdate={onUpdate}
         onDelete={onDelete}
         currentStyle={GeoFencesStyles}
+      /> }
+      {action === 'Terminal Area' && <DrawControl
+        onCreate={onUpdate}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+        currentStyle={TerminalAreasStyles}
       /> }
     </Map>
     <SpeedDial setChoice={setAction} />

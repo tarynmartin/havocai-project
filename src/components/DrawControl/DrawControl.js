@@ -1,19 +1,19 @@
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { useControl } from 'react-map-gl';
-import { useMemo, memo, useCallback } from 'react';
-import NewUseControl from './NewUseControl';
-
-// styles
-import { AvoidZonesStyles } from './AvoidZone.styles';
-import { GeoFencesStyles } from './GeoFence.styles';
-import { TerminalAreasStyles } from './TerminalArea.styles';
-// import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
 const DrawControl = (props) => {
+  const defaultProps = {
+    displayControlsDefault: false,
+    controls: {
+      polygon: true,
+      trash: true
+    },
+    defaultMode: 'draw_polygon'
+  }
+
   useControl(
     () => {
-      console.log('useControl');
-      return new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props})
+      return new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps})
     },
     ({map}) => {
       map.on('draw.create', props.onCreate);
@@ -26,17 +26,11 @@ const DrawControl = (props) => {
       map.off('draw.delete', props.onDelete);
     },
     {
-      position: props.position,
+      position: 'top-left',
     }
   );
 
   return null;
-  // return (
-  //   <NewUseControl
-  //     drawStyle={drawStyle}
-  //     props={props}
-  //   />
-  // );
 };
 
 export default DrawControl;
