@@ -1,4 +1,5 @@
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import { render } from 'react-dom';
 import { useControl } from 'react-map-gl';
 
 const DrawControl = (props) => {
@@ -12,11 +13,12 @@ const DrawControl = (props) => {
   }
 
   useControl(
-    () => {
-      return new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps})
-    },
-    ({map}) => {
-      map.on('draw.create', props.onCreate);
+    () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
+    ({ map }) => {
+      map.on('draw.create', (e) => {
+        console.log('Created Polygon Coordinates', {...e.features[0].geometry, area: props.currentAction })
+        props.onCreate(e)
+      });
       map.on('draw.update', props.onUpdate);
       map.on('draw.delete', props.onDelete);
     },

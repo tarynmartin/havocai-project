@@ -50,19 +50,22 @@ const App = () => {
         onCreate={onUpdate}
         onUpdate={onUpdate}
         onDelete={onDelete}
-        currentStyle={AvoidZonesStyles} />
-      }
+        currentStyle={AvoidZonesStyles} 
+        currentAction={action}
+      />}
       {action === 'Geo Fence' && <DrawControl
         onCreate={onUpdate}
         onUpdate={onUpdate}
         onDelete={onDelete}
         currentStyle={GeoFencesStyles}
+        currentAction={action}
       /> }
       {action === 'Terminal Area' && <DrawControl
         onCreate={onUpdate}
         onUpdate={onUpdate}
         onDelete={onDelete}
         currentStyle={TerminalAreasStyles}
+        currentAction={action}
       /> }
     </Map>
     <SpeedDial setChoice={setAction} />
