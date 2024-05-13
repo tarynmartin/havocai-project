@@ -4,7 +4,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import FenceIcon from '@mui/icons-material/Fence';
 import RouteIcon from '@mui/icons-material/Route';
 
-const SpeedDial = () => {
+const SpeedDial = ({ setChoice }) => {
   const actions = [
     { icon: <BlockIcon />, name: 'Avoid Zone' },
     { icon: <FenceIcon />, name: 'Geo Fence' },
@@ -12,14 +12,15 @@ const SpeedDial = () => {
   ]
   return (
     <div>
-      <SpeedDialMUI ariaLabel="SpeedDial basic example"
-        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+      <SpeedDialMUI ariaLabel="SpeedDial actions"
+        sx={{ position: 'absolute', bottom: 35, right: 16 }}
         icon={<SpeedDialIcon />}>
         {actions.map((action) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
+            onClick={() => { setChoice(action.name) }}
           />
         ))}
       </SpeedDialMUI>
