@@ -16,7 +16,8 @@ const DrawControl = (props) => {
     () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
     ({ map }) => {
       map.on('draw.create', (e) => {
-        console.log('Created Polygon Coordinates', {...e.features[0].geometry, area: props.currentAction })
+        e.features[0].geometry.area = props.currentAction
+        console.log('Created Polygon Coordinates', e.features)
         props.onCreate(e)
       });
       map.on('draw.update', props.onUpdate);
