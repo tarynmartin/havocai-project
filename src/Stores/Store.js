@@ -3,13 +3,22 @@ import { makeAutoObservable, observable, action } from "mobx";
 export default class Store {
   drawFeatureID = '';
   features = {};
+  action = ''
 
   constructor() {
     makeAutoObservable(this, {
       drawFeatureID: observable,
       features: observable,
+      action: observable,
+      setAction: action,
       addFeatureID: action,
+      setFeatures: action,
+      deleteFeatures: action,
     });
+  }
+
+  setAction(type) {
+    this.action = type;
   }
 
   addFeatureID(id) {

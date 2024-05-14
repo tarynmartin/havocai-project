@@ -37,10 +37,17 @@ const DrawControl = observer(function DrawControl(props) {
   useControl(
     () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
     ({ map }) => {
+      // map.on('draw.load', store.deleteFeatures);
+      // map.on('draw.modechange', (e) => { console.log('mode change???', e)});
+      // map.on('draw.render', (e) => { console.log('render', e)});
+      // map.on('draw.actionable', (e) => { console.log('actionable', e)});
+      // map.on('load', function() {
+      //   console.log('check on load', draw.getAll())
+      // });
       map.on('draw.create', (e) => {
         // why is this being called so many times????
-        // e.features[0].geometry.area = props.currentAction
-        console.log('outside create')
+        e.features[0].geometry.area = store.action
+        // console.log('outside create', map.getAll())
         // for (const f of store.features) {
         //   console.log('inside', f.id)
         // }
