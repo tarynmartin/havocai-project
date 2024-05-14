@@ -29,6 +29,11 @@ export const useTerminalAreasStore = () => {
   return terminalAreasStore;
 }
 
+export const useStore = () => {
+  const { store } = useRootStore();
+  return store;
+}
+
 export const RootStoreProvider = ({ children }) => {
   const root = store ?? new RootStore();
 

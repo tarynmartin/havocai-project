@@ -13,7 +13,9 @@ export default class GeoFencesStore {
   }
 
   addGeoFence(geoFence) {
-    this.geoFences.push(geoFence);
+    if (!this.geoFences.find((fence) => fence.id === geoFence.id)) {
+      this.geoFences.push(geoFence);
+    }
   }
 
   removeGeoFence(geoFence) {

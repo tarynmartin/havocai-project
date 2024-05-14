@@ -1,7 +1,14 @@
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import { observer } from 'mobx-react';
 import { useControl } from 'react-map-gl';
+import { useAvoidZonesStore, useGeoFencesStore, useTerminalAreasStore, useStore } from '../../Providers/RootStoreProvider';
 
-const DrawControl = (props) => {
+const DrawControl = observer(function DrawControl(props) {
+  const avoidZonesStore = useAvoidZonesStore();
+  const geoFencesStore = useGeoFencesStore();
+  const terminalAreasStore = useTerminalAreasStore();
+  const store = useStore();
+
   const defaultProps = {
     displayControlsDefault: false,
     controls: {
@@ -11,19 +18,42 @@ const DrawControl = (props) => {
     defaultMode: 'draw_polygon'
   }
 
+  const addToStore = (e) => {
+    switch (props.currentAction) {
+      case 'Avoid Zone':
+        avoidZonesStore.addAvoidZone(e.features[0]);
+        break;
+      case 'Geo Fence':
+        geoFencesStore.addGeoFence(e.features[0]);
+        break;
+      case 'Terminal Area':
+        terminalAreasStore.addTerminalArea(e.features[0]);
+        break;
+      default:
+        break;
+    }
+  }
+
   useControl(
-    () => {
-      return new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps})
+    () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
+    ({ map }) => {
+      map.on('draw.create', (e) => {
+        e.features[0].geometry.area = props.currentAction
+        if (store.drawFeatureID !== e.features[0].id) {
+          console.log('Polygon Created', e.features[0])
+          addToStore(e);
+          store.setFeatures(e);
+        } else {
+          store.deleteFeatures(e);
+        }
+      });
+      map.on('draw.update', store.setFeatures)
+      map.on('draw.delete', store.deleteFeatures)
     },
     ({map}) => {
-      map.on('draw.create', props.onCreate);
-      map.on('draw.update', props.onUpdate);
-      map.on('draw.delete', props.onDelete);
-    },
-    ({map}) => {
-      map.off('draw.create', props.onCreate);
-      map.off('draw.update', props.onUpdate);
-      map.off('draw.delete', props.onDelete);
+      map.off('draw.create', store.setFeatures);
+      map.off('draw.update', store.setFeatures);
+      map.off('draw.delete', store.deleteFeatures);
     },
     {
       position: 'top-left',
@@ -31,6 +61,6 @@ const DrawControl = (props) => {
   );
 
   return null;
-};
+});
 
 export default DrawControl;
