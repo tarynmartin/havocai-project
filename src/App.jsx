@@ -1,14 +1,26 @@
 import React, { useState} from 'react';
-import SpeedDial from './components/SpeedDial/SpeedDial.jsx';
 import MainMap from './components/Map/Map.jsx';
+import MenuDrawer from './components/MenuDrawer/MenuDrawer.jsx';
+import SaveZoneModal from './components/SaveZoneModal/SaveZoneModal.jsx';
 
 const App = () => {
-  const [action, setAction] = useState('');
+  const [isSaveZoneModalOpen, setIsSaveZoneModalOpen] = useState(false);
+
+  const toggleSaveZoneModal = () => {
+    console.log('check app', isSaveZoneModalOpen)
+    setIsSaveZoneModalOpen(!isSaveZoneModalOpen);
+  }
 
   return (
     <div className='app'>
-      <MainMap action={action} />
-      <SpeedDial onClick={setAction} />
+      {/* does this need to be an overlay? */}
+      <MainMap />
+      <MenuDrawer
+        setSaveZoneModal={toggleSaveZoneModal}
+      />
+      {isSaveZoneModalOpen && 
+        <SaveZoneModal open={isSaveZoneModalOpen} handleClose={toggleSaveZoneModal} />
+      }
     </div>
   );
 }

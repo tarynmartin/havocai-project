@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from "mobx";
+import { makeObservable, observable, action, computed } from "mobx";
 
 export default class AvoidZonesStore {
   avoidZones = [];
@@ -10,7 +10,6 @@ export default class AvoidZonesStore {
         addAvoidZone: action,
         removeAvoidZone: action,
       });
-
   }
 
   addAvoidZone(avoidZone) {
