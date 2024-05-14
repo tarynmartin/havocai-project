@@ -3,16 +3,14 @@ import { SpeedDial as SpeedDialMUI, SpeedDialAction, SpeedDialIcon } from '@mui/
 import BlockIcon from '@mui/icons-material/Block';
 import FenceIcon from '@mui/icons-material/Fence';
 import RouteIcon from '@mui/icons-material/Route';
-import { observer } from 'mobx-react';
-import { useStore } from '../../Providers/RootStoreProvider';
 
-const SpeedDial = observer(function SpeedDial() {
-  const store = useStore();
+const SpeedDial = ({ onClick }) => {
   const actions = [
     { icon: <BlockIcon />, name: 'Avoid Zone' },
     { icon: <FenceIcon />, name: 'Geo Fence' },
     { icon: <RouteIcon />, name: 'Terminal Area' },
   ]
+
   return (
     <div>
       <SpeedDialMUI ariaLabel="SpeedDial actions"
@@ -23,12 +21,12 @@ const SpeedDial = observer(function SpeedDial() {
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            onClick={() => { store.setAction(action.name) }}
+            onClick={() => { onClick(action.name) }}
           />
         ))}
       </SpeedDialMUI>
     </div>
   )
-});
+};
 
 export default SpeedDial;

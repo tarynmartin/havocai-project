@@ -37,25 +37,11 @@ const DrawControl = observer(function DrawControl(props) {
   useControl(
     () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
     ({ map }) => {
-      // map.on('draw.load', store.deleteFeatures);
-      // map.on('draw.modechange', (e) => { console.log('mode change???', e)});
-      // map.on('draw.render', (e) => { console.log('render', e)});
-      // map.on('draw.actionable', (e) => { console.log('actionable', e)});
-      // map.on('load', function() {
-      //   console.log('check on load', draw.getAll())
-      // });
       map.on('draw.create', (e) => {
-        // why is this being called so many times????
-        e.features[0].geometry.area = store.action
-        // console.log('outside create', map.getAll())
-        // for (const f of store.features) {
-        //   console.log('inside', f.id)
-        // }
-        // console.log('store features', store.features)
+        e.features[0].geometry.area = props.currentAction
         if (store.drawFeatureID !== e.features[0].id) {
-          console.log('inside create')
+          console.log('Polygon Created', e.features[0])
           addToStore(e);
-          // store.addFeatureID(e.features[0].id);
           store.setFeatures(e);
         } else {
           store.deleteFeatures(e);
@@ -67,7 +53,7 @@ const DrawControl = observer(function DrawControl(props) {
     ({map}) => {
       map.off('draw.create', store.setFeatures);
       map.off('draw.update', store.setFeatures);
-      map.off('draw.delete', store.deleteFea);
+      map.off('draw.delete', store.deleteFeatures);
     },
     {
       position: 'top-left',
