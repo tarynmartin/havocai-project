@@ -13,7 +13,9 @@ export default class TerminalAreasStore {
     }
     
     addTerminalArea(terminalArea) {
-      this.terminalAreas.push(terminalArea);
+      if (!this.terminalAreas.find((area) => area.id === terminalArea.id)) {
+        this.terminalAreas.push(terminalArea);
+      }
     }
 
     removeTerminalArea(terminalArea) {

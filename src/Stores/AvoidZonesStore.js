@@ -14,10 +14,12 @@ export default class AvoidZonesStore {
   }
 
   addAvoidZone(avoidZone) {
-    this.avoidZones.push(avoidZone);
+    if (!this.avoidZones.find((zone) => zone.id === avoidZone.id)) {
+      this.avoidZones.push(avoidZone);
+    }
   }
 
   removeAvoidZone(avoidZone) {
-    this.avoidZones = this.avoidZones.filter((zone) => zone !== avoidZone);
+    this.avoidZones = this.avoidZones.filter((zone) => zone.id !== avoidZone.id);
   }
 }
