@@ -2,6 +2,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 
+// TODO: add disable prop/logic
 const MenuListItem = ({ text, selected, onClick }) => {
   return (
     <ListItem disablePadding>

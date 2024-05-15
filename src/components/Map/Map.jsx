@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Map, { Source } from 'react-map-gl';
 import { observer } from 'mobx-react';  
 import { useStore } from '../../Providers/RootStoreProvider';
@@ -12,6 +13,28 @@ import { TerminalAreasStyles } from '../../utils/TerminalArea.styles';
 
 const MainMap = observer(() => {
   const store = useStore();
+  const displaySavedZones = store.displaySavedZones;
+
+  const GeoJSON = {
+    type: 'FeatureCollection',
+    features: [{type: 'Feature', properties: {area: store.action}}]
+  }
+
+  const createJSON = useMemo(() => {
+    if (!displaySavedZones) {
+      return GeoJSON;
+    }
+    
+    const savedZone = store.getSavedZone(store.drawFeatureID);
+    savedZone.geometry.type = 'Polygon';
+
+    const JSONObject = {
+      type: 'FeatureCollection',
+      features: [savedZone]
+    }
+    console.log('made object: ', JSONObject)
+    return JSONObject;
+  }, [displaySavedZones])
 
   return (
     <Map
@@ -25,8 +48,9 @@ const MainMap = observer(() => {
         mapStyle="mapbox://styles/mapbox/satellite-v9"
         onRender={(e) => e.target.resize()}
     >
-      <Source id="geojson" type="geojson" data={() => getGeoJSON(action)}>
-        {store.action === 'Avoid Zone' && 
+      <Source id="geojson" type="geojson" data={createJSON}>
+        <DrawControl />
+        {/* {store.action === 'Avoid Zone' && 
           <DrawControl
             currentStyle={AvoidZonesStyles} 
           />
@@ -40,7 +64,7 @@ const MainMap = observer(() => {
           <DrawControl
             currentStyle={TerminalAreasStyles}
           />
-        }
+        } */}
       </Source>
     </Map>
   )

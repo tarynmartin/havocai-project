@@ -10,7 +10,7 @@ export const AvoidZonesStyles = [
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#D20C0C",
+        "line-color": ["case", ["string", ["feature-state", "area"], "Avoid Zone"], "#D20C0C"],
         "line-dasharray": [0.2, 2],
         "line-width": 2
       }
@@ -21,8 +21,8 @@ export const AvoidZonesStyles = [
     "type": "fill",
     "filter": ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
     "paint": {
-      "fill-color": "#D20C0C",
-      "fill-outline-color": "#D20C0C",
+      "fill-color": ["case", ["string", ["feature-state", "area"], "Avoid Zone"], "#D20C0C"],
+      "fill-outline-color": ["case", ["string", ["feature-state", "area"], "Avoid Zone"], "#D20C0C"],
       "fill-opacity": 0.1
     }
   },
@@ -49,7 +49,7 @@ export const AvoidZonesStyles = [
       "line-join": "round"
     },
     "paint": {
-      "line-color": "#D20C0C",
+      "line-color": ["case", ["string", ["feature-state", "area"], "Avoid Zone"], "#D20C0C"],
       "line-dasharray": [0.2, 2],
       "line-width": 2
     }
@@ -71,7 +71,7 @@ export const AvoidZonesStyles = [
     "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
     "paint": {
       "circle-radius": 3,
-      "circle-color": "#D20C0C",
+      "circle-color": ["case", ["string", ["feature-state", "area"], "Avoid Zone"], "#D20C0C"],
     }
   },
 

@@ -44,7 +44,7 @@ const SaveZoneModal = observer(({ open, handleClose }) => {
   }
 
   const onSave = () => {
-    const savedFeature = {...zoneData, properties: {name: zoneName, notes: zoneNotes}};
+    const savedFeature = {...zoneData, properties: {...zoneData.properties, name: zoneName, notes: zoneNotes}};
 
     store.addSavedZone(savedFeature)
     handleClose();
@@ -60,7 +60,7 @@ const SaveZoneModal = observer(({ open, handleClose }) => {
           <DialogContentText sx={{ marginTop: '0.5rem' }}>
             Zone Type
           </DialogContentText>
-          <div>{zoneData?.geometry?.area}</div>
+          <div>{zoneData?.properties?.area}</div>
           <DialogContentText sx={{ marginTop: '0.5rem' }}>
             Zone Coordinates
           </DialogContentText>

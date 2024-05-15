@@ -5,6 +5,7 @@ export default class Store {
   features = {};
   action = ''
   savedZones = [];
+  displaySavedZones = false;
 
   constructor() {
     makeAutoObservable(this, {
@@ -12,6 +13,7 @@ export default class Store {
       features: observable,
       action: observable,
       savedZones: observable,
+      displaySavedZones: observable,
       setAction: action,
       addFeatureID: action,
       setFeatures: action,
@@ -56,5 +58,13 @@ export default class Store {
     if (!this.savedZones.find((savedZone) => savedZone.id === zone.id)) {
       this.savedZones.push(zone);
     }
+  }
+
+  getSavedZone(id) {
+    return this.savedZones.find((zone) => zone.id === id);
+  }
+
+  setDisplaySavedZones(state) {
+    this.displaySavedZones = state;
   }
 }
