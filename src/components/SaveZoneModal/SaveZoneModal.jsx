@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
-// stores
-import { 
-  useStore,
-  useAvoidZonesStore,
-  useGeoFencesStore,
-  useTerminalAreasStore
-} from '../../Providers/RootStoreProvider';
+import { useStore } from '../../Providers/RootStoreProvider';
 // styling
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -18,10 +12,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import './styles.css';
 
 const SaveZoneModal = observer(({ open, handleClose }) => {
-  // store declarations
-  const avoidZonesStore = useAvoidZonesStore();
-  const geoFencesStore = useGeoFencesStore();
-  const terminalAreasStore = useTerminalAreasStore();
   const store = useStore();
   // state
   const [zoneData, setZoneData] = useState({});
@@ -56,23 +46,8 @@ const SaveZoneModal = observer(({ open, handleClose }) => {
   const onSave = () => {
     const savedFeature = {...zoneData, properties: {name: zoneName, notes: zoneNotes}};
 
-    switch (zoneData.geometry.area) {
-      case 'Avoid Zone':
-        avoidZonesStore.addAvoidZone(savedFeature);
-        handleClose();
-        break;
-      case 'Geo Fence':
-        geoFencesStore.addGeoFence(savedFeature);
-        handleClose();
-        break;
-      case 'Terminal Area':
-        terminalAreasStore.addTerminalArea(savedFeature);
-        handleClose();
-        break;
-      default:
-        handleClose();
-        break;
-    }
+    store.addSavedZone(savedFeature)
+    handleClose();
     // TODO: add toast message for success?
   }
 

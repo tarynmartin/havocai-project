@@ -1,6 +1,5 @@
 import Map, { Source } from 'react-map-gl';
 import { observer } from 'mobx-react';  
-// stores
 import { useStore } from '../../Providers/RootStoreProvider';
 // components/utils
 import DrawControl from '../DrawControl/DrawControl';
