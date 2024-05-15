@@ -1,14 +1,11 @@
-import React, { useState} from 'react';
-import SpeedDial from './components/SpeedDial/SpeedDial.jsx';
 import MainMap from './components/Map/Map.jsx';
+import MenuDrawer from './components/MenuDrawer/MenuDrawer.jsx';
 
 const App = () => {
-  const [action, setAction] = useState('');
-
   return (
     <div className='app'>
-      <MainMap action={action} />
-      <SpeedDial onClick={setAction} />
+      <MainMap />
+      <MenuDrawer />
     </div>
   );
 }

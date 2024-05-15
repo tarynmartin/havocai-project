@@ -1,15 +1,18 @@
-import React from 'react';
 import Map, { Source } from 'react-map-gl';
+import { observer } from 'mobx-react';  
+import { useStore } from '../../Providers/RootStoreProvider';
+// components/utils
 import DrawControl from '../DrawControl/DrawControl';
 import { getGeoJSON } from '../../utils/utils';
-
 // styles
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import { AvoidZonesStyles } from '../../utils/AvoidZone.styles';
 import { GeoFencesStyles } from '../../utils/GeoFence.styles';
 import { TerminalAreasStyles } from '../../utils/TerminalArea.styles';
 
-const MainMap = ({ action }) => {
+const MainMap = observer(() => {
+  const store = useStore();
+
   return (
     <Map
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_KEY}
@@ -23,27 +26,24 @@ const MainMap = ({ action }) => {
         onRender={(e) => e.target.resize()}
     >
       <Source id="geojson" type="geojson" data={() => getGeoJSON(action)}>
-        {action === 'Avoid Zone' && 
+        {store.action === 'Avoid Zone' && 
           <DrawControl
             currentStyle={AvoidZonesStyles} 
-            currentAction={action}
           />
         }
-        {action === 'Geo Fence' &&
+        {store.action === 'Geo Fence' &&
           <DrawControl
             currentStyle={GeoFencesStyles}
-            currentAction={action}
           />
         }
-        {action === 'Terminal Area' &&
+        {store.action === 'Terminal Area' &&
           <DrawControl
             currentStyle={TerminalAreasStyles}
-            currentAction={action}
           />
         }
       </Source>
     </Map>
   )
-};
+});
 
 export default MainMap;

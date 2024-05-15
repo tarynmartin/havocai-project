@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { RootStore } from "../Stores/RootStore";
 
 let store;
@@ -12,21 +12,6 @@ export const useRootStore = () => {
   }
 
   return context;
-}
-
-export const useAvoidZonesStore = () => {
-  const { avoidZonesStore } = useRootStore();
-  return avoidZonesStore;
-}
-
-export const useGeoFencesStore = () => {
-  const { geoFencesStore } = useRootStore();
-  return geoFencesStore;
-}
-
-export const useTerminalAreasStore = () => {
-  const { terminalAreasStore } = useRootStore();
-  return terminalAreasStore;
 }
 
 export const useStore = () => {

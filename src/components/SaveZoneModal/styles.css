@@ -1,0 +1,15 @@
+.coordinatesContainer {
+  margin-bottom: 1rem;
+  max-height: 11rem;
+  overflow: auto;
+}
+
+.coordinateContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.25rem;
+}
+
+.coordinates {
+  padding-left: 1rem;
+}
