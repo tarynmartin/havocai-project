@@ -63,6 +63,13 @@ export default class Store {
   getSavedZone(id) {
     return this.savedZones.find((zone) => zone.id === id);
   }
+  
+  removeSavedZone(id) {
+    const newSavedZones = this.savedZones.filter((zone) => zone.id !== id);
+    this.savedZones = newSavedZones;
+    this.displaySavedZones = false;
+    this.drawFeatureID = null;
+  }
 
   setDisplaySavedZones(state) {
     this.displaySavedZones = state;

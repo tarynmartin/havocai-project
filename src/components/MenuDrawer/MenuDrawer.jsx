@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import SwitchZoneModal from '../SwitchZoneModal/SwitchZoneModal';
 import SaveZoneModal from '../SaveZoneModal/SaveZoneModal';
-import MenuListItem from '../MenuListItem/MenuListItem';
+import { MenuListItem, IconMenuListItem } from '../MenuListItem/MenuListItem';
 
 const MenuDrawer = observer(() => {
   const drawnZoneOptions = ['Avoid Zone', 'Geo Fence', 'Terminal Area'];
@@ -62,17 +62,17 @@ const MenuDrawer = observer(() => {
     store.setDisplaySavedZones(false);
     setShowSwitchZoneModal(false)
 
-    if (isSaving) {
-      toggleSaveZoneModal();
-    } else {
-      setZone(selectedZone)
-    }
+    isSaving ? toggleSaveZoneModal() : setZone(selectedZone)
   }
 
   const checkSavedZone = (zone) => {
     setZone(zone.properties.area)
     store.addFeatureID(zone.id)
     store.setDisplaySavedZones(true);
+  }
+
+  const deleteSavedZone = (id) => {
+    store.removeSavedZone(id)
   }
 
   return (
@@ -102,7 +102,7 @@ const MenuDrawer = observer(() => {
           <List>
             {savedZones.length > 0 && savedZones.map((zone) => {
               return (
-                <MenuListItem key={zone.properties.name} selected={drawFeatureID === zone.id && store.displaySavedZones} text={zone.properties.name} onClick={() => checkSavedZone(zone)} />
+                <IconMenuListItem key={zone.properties.name} selected={drawFeatureID === zone.id && store.displaySavedZones} text={zone.properties.name} onClick={() => checkSavedZone(zone)} onIconClick={() => deleteSavedZone(zone.id)}/>
               )
             })}
           </List>

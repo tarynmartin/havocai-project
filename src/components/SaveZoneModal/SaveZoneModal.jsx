@@ -13,12 +13,10 @@ import './styles.css';
 
 const SaveZoneModal = observer(({ open, handleClose }) => {
   const store = useStore();
-  // state
+  const { action } = store;
   const [zoneData, setZoneData] = useState({});
   const [zoneName, setZoneName] = useState('');
   const [zoneNotes, setZoneNotes] = useState('');
-  // constants
-  const action = store.action
 
   useEffect(() => {
     const featureID = store.drawFeatureID;
@@ -53,7 +51,7 @@ const SaveZoneModal = observer(({ open, handleClose }) => {
 
   return (
     <>
-    {/* add PaperProps? What are the purpose? */}
+    {/* TODO: add PaperProps? What are the purpose? */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Save Zone</DialogTitle>
         <DialogContent>

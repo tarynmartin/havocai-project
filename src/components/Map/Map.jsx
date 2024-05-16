@@ -17,13 +17,11 @@ const MainMap = observer(() => {
     type: 'FeatureCollection',
     features: [{type: 'Feature', properties: {area: store.action}}]
   }
-  const displaySavedZones = store.displaySavedZones;
+  const { displaySavedZones, action } = store;
   const [drawnFeatures, setDrawnFeatures] = useState(GeoJSON);
 
   useEffect(() => {
-    if (!displaySavedZones) {
-      return;
-    }
+    if (!displaySavedZones) return;
     
     const savedZone = store.getSavedZone(store.drawFeatureID);
     savedZone.geometry.type = 'Polygon';
@@ -37,14 +35,15 @@ const MainMap = observer(() => {
   }, [displaySavedZones])
 
   const findStyles = useMemo(() => {
-    if (store.action === 'Avoid Zone') {
-      return "#D20C0C";
-    }
-    if (store.action === 'Geo Fence') {
-      return "#f2f213";
-    }
-    if (store.action === 'Terminal Area') {
-      return "#eb9707";
+    switch(action) {
+      case('Avoid Zone'):
+        return "#D20C0C";
+      case('Geo Fence'):
+        return "#f2f213";
+      case('Terminal Area'):
+        return "#eb9707";
+      default:
+        return "#000000";
     }
   }, [displaySavedZones, store.action])
 
@@ -97,17 +96,17 @@ const MainMap = observer(() => {
       }
       {!displaySavedZones && 
          <Source id="geojson" type="geojson" data={drawnFeatures}>
-          {store.action === 'Avoid Zone' && 
+          {action === 'Avoid Zone' && 
             <DrawControl
               currentStyle={AvoidZonesStyles} 
             />
           }
-          {store.action === 'Geo Fence' &&
+          {action === 'Geo Fence' &&
             <DrawControl
               currentStyle={GeoFencesStyles}
             />
           }
-          {store.action === 'Terminal Area' &&
+          {action === 'Terminal Area' &&
             <DrawControl
               currentStyle={TerminalAreasStyles}
             />
