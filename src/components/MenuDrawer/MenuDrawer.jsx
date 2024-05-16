@@ -10,6 +10,8 @@ import SaveZoneModal from '../SaveZoneModal/SaveZoneModal';
 import MenuListItem from '../MenuListItem/MenuListItem';
 
 const MenuDrawer = observer(() => {
+  const drawnZoneOptions = ['Avoid Zone', 'Geo Fence', 'Terminal Area'];
+  const menuOptions = ['Save Zone', 'Saved Zones'];
   const store = useStore();
   const { action, drawFeatureID, savedZones } = store;
   const [selectedZone, setSelectedZone] = useState('');
@@ -20,6 +22,7 @@ const MenuDrawer = observer(() => {
   const toggleSaveZoneModal = () => {
     store.setDisplaySavedZones(false);
     setShowSaveModal(!showSaveModal);
+
     if (selectedZone !== action) {
       store.setAction(selectedZone)
     }
@@ -27,6 +30,7 @@ const MenuDrawer = observer(() => {
 
   const toggleMenuOptions = (option) => {
     store.setDisplaySavedZones(false);
+
     if (option === 'Save Zone') {
       toggleSaveZoneModal()
     }
@@ -43,6 +47,7 @@ const MenuDrawer = observer(() => {
   const handleZoneSelection = (zone) => {
     // will only stop changing the type of zone if the selected polygon is saved, does not prevent switch for unselected polygons
     store.setDisplaySavedZones(false);
+    store.addFeatureID(null);
     const savedZone = savedZones.find((zone) => zone.id === drawFeatureID);
 
     if (!drawFeatureID || savedZone) {
@@ -56,6 +61,7 @@ const MenuDrawer = observer(() => {
   const switchToSaveModal = (isSaving) => {
     store.setDisplaySavedZones(false);
     setShowSwitchZoneModal(false)
+
     if (isSaving) {
       toggleSaveZoneModal();
     } else {
@@ -64,11 +70,9 @@ const MenuDrawer = observer(() => {
   }
 
   const checkSavedZone = (zone) => {
-    console.log('zone', zone)
     setZone(zone.properties.area)
     store.addFeatureID(zone.id)
     store.setDisplaySavedZones(true);
-    // how to display the polygon
   }
 
   return (
@@ -88,7 +92,7 @@ const MenuDrawer = observer(() => {
     >
       <List>
         {/* TODO: disable save zone if there isn't one selected */}
-        {['Save Zone', 'Saved Zones'].map(text => (
+        {menuOptions.map(text => (
           <MenuListItem key={text} text={text} onClick={() => toggleMenuOptions(text)} />
         ))}
       </List>
@@ -108,13 +112,13 @@ const MenuDrawer = observer(() => {
         <Divider />
         <h2>Available Zones</h2>
         <List>
-          {['Avoid Zone', 'Geo Fence', 'Terminal Area'].map((text, index) => (
+          {drawnZoneOptions.map((text, index) => (
             <MenuListItem key={text} text={text} selected={text === selectedZone} onClick={() => handleZoneSelection(text)} />
           ))}
         </List>
       </div>
       {showSwitchZoneModal && <SwitchZoneModal open={showSwitchZoneModal} handleClose={switchToSaveModal} />}
-      {showSaveModal && 
+      {(drawFeatureID && showSaveModal) && 
         <SaveZoneModal open={showSaveModal} handleClose={toggleSaveZoneModal} />
       }
     </Drawer>

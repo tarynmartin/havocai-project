@@ -1,28 +1,28 @@
-import { useMemo } from 'react';
-import Map, { Source } from 'react-map-gl';
+import { useMemo, useState, useEffect } from 'react';
+import Map, { Source, Layer } from 'react-map-gl';
 import { observer } from 'mobx-react';  
 import { useStore } from '../../Providers/RootStoreProvider';
 // components/utils
 import DrawControl from '../DrawControl/DrawControl';
-import { getGeoJSON } from '../../utils/utils';
+import { labelLayout } from '../../utils/utils';
 // styles
-import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import { AvoidZonesStyles } from '../../utils/AvoidZone.styles';
 import { GeoFencesStyles } from '../../utils/GeoFence.styles';
 import { TerminalAreasStyles } from '../../utils/TerminalArea.styles';
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
 const MainMap = observer(() => {
   const store = useStore();
-  const displaySavedZones = store.displaySavedZones;
-
   const GeoJSON = {
     type: 'FeatureCollection',
     features: [{type: 'Feature', properties: {area: store.action}}]
   }
+  const displaySavedZones = store.displaySavedZones;
+  const [drawnFeatures, setDrawnFeatures] = useState(GeoJSON);
 
-  const createJSON = useMemo(() => {
+  useEffect(() => {
     if (!displaySavedZones) {
-      return GeoJSON;
+      return;
     }
     
     const savedZone = store.getSavedZone(store.drawFeatureID);
@@ -32,9 +32,21 @@ const MainMap = observer(() => {
       type: 'FeatureCollection',
       features: [savedZone]
     }
-    console.log('made object: ', JSONObject)
-    return JSONObject;
+
+    setDrawnFeatures(JSONObject);
   }, [displaySavedZones])
+
+  const findStyles = useMemo(() => {
+    if (store.action === 'Avoid Zone') {
+      return "#D20C0C";
+    }
+    if (store.action === 'Geo Fence') {
+      return "#f2f213";
+    }
+    if (store.action === 'Terminal Area') {
+      return "#eb9707";
+    }
+  }, [displaySavedZones, store.action])
 
   return (
     <Map
@@ -48,24 +60,60 @@ const MainMap = observer(() => {
         mapStyle="mapbox://styles/mapbox/satellite-v9"
         onRender={(e) => e.target.resize()}
     >
-      <Source id="geojson" type="geojson" data={createJSON}>
-        <DrawControl />
-        {/* {store.action === 'Avoid Zone' && 
-          <DrawControl
-            currentStyle={AvoidZonesStyles} 
+      {displaySavedZones && 
+        <Source id="saved zone" type="geojson" data={drawnFeatures}>
+          <Layer 
+            id="saved zone"
+            type="fill"
+            source="saved zone"
+            paint={{
+              "fill-color": findStyles,
+              "fill-outline-color": findStyles,
+              "fill-opacity": 0.1
+            }} 
           />
-        }
-        {store.action === 'Geo Fence' &&
-          <DrawControl
-            currentStyle={GeoFencesStyles}
+          <Layer 
+            id="saved zone line"
+            type="line"
+            source="saved zone"
+            paint={{
+              "line-color": findStyles,
+              "line-dasharray": [0.2, 2],
+              "line-width": 2}} 
+            layout={{
+              "line-cap": "round",
+              "line-join": "round"
+            }}
           />
-        }
-        {store.action === 'Terminal Area' &&
-          <DrawControl
-            currentStyle={TerminalAreasStyles}
+          <Layer 
+            id="label layer"
+            type="symbol"
+            source="saved zone"
+            layout={labelLayout}
+            paint={{ 'text-color': '#000000' }}
           />
-        } */}
-      </Source>
+        </Source>
+        // TODO: add ability to interact w/the saved zones 
+      }
+      {!displaySavedZones && 
+         <Source id="geojson" type="geojson" data={drawnFeatures}>
+          {store.action === 'Avoid Zone' && 
+            <DrawControl
+              currentStyle={AvoidZonesStyles} 
+            />
+          }
+          {store.action === 'Geo Fence' &&
+            <DrawControl
+              currentStyle={GeoFencesStyles}
+            />
+          }
+          {store.action === 'Terminal Area' &&
+            <DrawControl
+              currentStyle={TerminalAreasStyles}
+            />
+          }
+        </Source>
+      }
     </Map>
   )
 });
