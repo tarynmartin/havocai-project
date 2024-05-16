@@ -1,7 +1,7 @@
-export const getGeoJSON = (action) => {
-  return ({
-  type: 'FeatureCollection',
-  features: [
-    {type: 'Feature', geometry: {area: action}}
-  ]
-})};
+export const labelLayout = {
+  'text-field': ['get', 'name'],
+  'text-font': ['Open Sans Regular'],
+  'text-size': 20,
+  'text-anchor': 'top',
+  'text-offset': [0, 1],
+}

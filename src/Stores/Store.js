@@ -5,6 +5,7 @@ export default class Store {
   features = {};
   action = ''
   savedZones = [];
+  displaySavedZones = false;
 
   constructor() {
     makeAutoObservable(this, {
@@ -12,6 +13,7 @@ export default class Store {
       features: observable,
       action: observable,
       savedZones: observable,
+      displaySavedZones: observable,
       setAction: action,
       addFeatureID: action,
       setFeatures: action,
@@ -56,5 +58,20 @@ export default class Store {
     if (!this.savedZones.find((savedZone) => savedZone.id === zone.id)) {
       this.savedZones.push(zone);
     }
+  }
+
+  getSavedZone(id) {
+    return this.savedZones.find((zone) => zone.id === id);
+  }
+  
+  removeSavedZone(id) {
+    const newSavedZones = this.savedZones.filter((zone) => zone.id !== id);
+    this.savedZones = newSavedZones;
+    this.displaySavedZones = false;
+    this.drawFeatureID = null;
+  }
+
+  setDisplaySavedZones(state) {
+    this.displaySavedZones = state;
   }
 }

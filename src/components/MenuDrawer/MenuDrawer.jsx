@@ -7,25 +7,35 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import SwitchZoneModal from '../SwitchZoneModal/SwitchZoneModal';
 import SaveZoneModal from '../SaveZoneModal/SaveZoneModal';
-import MenuListItem from '../MenuListItem/MenuListItem';
+import { MenuListItem, IconMenuListItem } from '../MenuListItem/MenuListItem';
 
 const MenuDrawer = observer(() => {
+  const drawnZoneOptions = ['Avoid Zone', 'Geo Fence', 'Terminal Area'];
+  const menuOptions = ['Save Zone', 'Saved Zones'];
   const store = useStore();
   const { action, drawFeatureID, savedZones } = store;
   const [selectedZone, setSelectedZone] = useState('');
+  const [showSavedZones, setShowSavedZones] = useState(false);
   const [showSwitchZoneModal, setShowSwitchZoneModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
   const toggleSaveZoneModal = () => {
+    store.setDisplaySavedZones(false);
     setShowSaveModal(!showSaveModal);
+
     if (selectedZone !== action) {
       store.setAction(selectedZone)
     }
   }
 
   const toggleMenuOptions = (option) => {
+    store.setDisplaySavedZones(false);
+
     if (option === 'Save Zone') {
       toggleSaveZoneModal()
+    }
+    if (option === 'Saved Zones') {
+      setShowSavedZones(!showSavedZones)
     }
   }
 
@@ -36,6 +46,8 @@ const MenuDrawer = observer(() => {
 
   const handleZoneSelection = (zone) => {
     // will only stop changing the type of zone if the selected polygon is saved, does not prevent switch for unselected polygons
+    store.setDisplaySavedZones(false);
+    store.addFeatureID(null);
     const savedZone = savedZones.find((zone) => zone.id === drawFeatureID);
 
     if (!drawFeatureID || savedZone) {
@@ -47,12 +59,20 @@ const MenuDrawer = observer(() => {
   }
 
   const switchToSaveModal = (isSaving) => {
+    store.setDisplaySavedZones(false);
     setShowSwitchZoneModal(false)
-    if (isSaving) {
-      toggleSaveZoneModal();
-    } else {
-      setZone(selectedZone)
-    }
+
+    isSaving ? toggleSaveZoneModal() : setZone(selectedZone)
+  }
+
+  const checkSavedZone = (zone) => {
+    setZone(zone.properties.area)
+    store.addFeatureID(zone.id)
+    store.setDisplaySavedZones(true);
+  }
+
+  const deleteSavedZone = (id) => {
+    store.removeSavedZone(id)
   }
 
   return (
@@ -62,7 +82,6 @@ const MenuDrawer = observer(() => {
       variant="permanent"
       sx={{
         width: 150,
-        height: '50%',
         flexShrink: 0,
         '& .MuiDrawer-paper': {
           width: 150,
@@ -73,21 +92,33 @@ const MenuDrawer = observer(() => {
     >
       <List>
         {/* TODO: disable save zone if there isn't one selected */}
-        {['Save Zone', 'Saved Zones'].map(text => (
+        {menuOptions.map(text => (
           <MenuListItem key={text} text={text} onClick={() => toggleMenuOptions(text)} />
         ))}
       </List>
+      {showSavedZones && 
+        <div>
+          <Divider />
+          <List>
+            {savedZones.length > 0 && savedZones.map((zone) => {
+              return (
+                <IconMenuListItem key={zone.properties.name} selected={drawFeatureID === zone.id && store.displaySavedZones} text={zone.properties.name} onClick={() => checkSavedZone(zone)} onIconClick={() => deleteSavedZone(zone.id)}/>
+              )
+            })}
+          </List>
+        </div>
+      }
       <div>
         <Divider />
         <h2>Available Zones</h2>
         <List>
-          {['Avoid Zone', 'Geo Fence', 'Terminal Area'].map((text, index) => (
+          {drawnZoneOptions.map((text, index) => (
             <MenuListItem key={text} text={text} selected={text === selectedZone} onClick={() => handleZoneSelection(text)} />
           ))}
         </List>
       </div>
       {showSwitchZoneModal && <SwitchZoneModal open={showSwitchZoneModal} handleClose={switchToSaveModal} />}
-      {showSaveModal && 
+      {(drawFeatureID && showSaveModal) && 
         <SaveZoneModal open={showSaveModal} handleClose={toggleSaveZoneModal} />
       }
     </Drawer>

@@ -20,7 +20,10 @@ const DrawControl = observer(function DrawControl(props) {
     () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
     ({ map }) => {
       map.on('draw.create', (e) => {
-        e.features[0].geometry.area = store.action
+        if (store.displaySavedZones) {
+          props.onDraw(e)
+        }
+        e.features[0].properties.area = store.action
         if (store.drawFeatureID !== e.features[0].id) {
           store.setFeatures(e);
           console.log('Polygon Created', e.features[0])
