@@ -20,9 +20,6 @@ const DrawControl = observer(function DrawControl(props) {
     () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
     ({ map }) => {
       map.on('draw.create', (e) => {
-        if (store.displaySavedZones) {
-          props.onDraw(e)
-        }
         e.features[0].properties.area = store.action
         if (store.drawFeatureID !== e.features[0].id) {
           store.setFeatures(e);
@@ -35,7 +32,10 @@ const DrawControl = observer(function DrawControl(props) {
           store.addFeatureID(feature?.properties?.id || feature?.properties?.parent);
         }
       });
-      map.on('draw.update', (e) => store.setFeatures(e))
+      map.on('draw.update', (e) => {
+        e.features[0].properties.area = store.action
+        store.setFeatures(e)
+      })
       map.on('draw.delete', (e) => store.deleteFeatures(e))
     },
     ({map}) => {
