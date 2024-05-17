@@ -10,6 +10,7 @@ import SaveZoneModal from '../SaveZoneModal/SaveZoneModal';
 import { MenuListItem, IconMenuListItem } from '../MenuListItem/MenuListItem';
 import DownloadCSV from '../DownloadCSV/DownloadCSV';
 import { convertToCSV } from '../../utils/utils';
+import './styles.css'
 
 const MenuDrawer = observer(() => {
   const drawnZoneOptions = ['Avoid Zone', 'Geo Fence', 'Terminal Area'];
@@ -34,16 +35,6 @@ const MenuDrawer = observer(() => {
     }
     return null;
   }, [drawFeatureID, savedZones]);
-
-  const savedZonesArray = useMemo(() => {
-    const savedKeys = Object.keys(savedZones)
-    const result = savedKeys.map((keyID) => {
-      const nameKeys = Object.keys(savedZones[keyID])
-      return nameKeys.map(name => savedZones[keyID][name])
-    })
-
-    return result.flat();
-  }, [savedZones])
 
   const toggleSaveZoneModal = () => {
     store.displaySavedZones = false;
@@ -110,43 +101,45 @@ const MenuDrawer = observer(() => {
           width: 150,
           boxSizing: 'border-box',
           justifyContent: 'space-between',
+          padding: '0.5rem 0.25rem 0 0.5rem'
         },
       }}
     >
-      <List>
-        {/* TODO: disable save zone if there isn't one selected */}
-        {menuOptions.map(text => (
-          <MenuListItem key={text} text={text} onClick={() => toggleMenuOptions(text)} />
-        ))}
-      </List>
-      {(currentSelectedZone && drawFeatureID) && 
-        <DownloadCSV 
-          buttonText='Download Coordinates'
-          fileName={currentSelectedZone.properties.fileName} 
-          data={convertToCSV(currentSelectedZone.geometry.coordinates, 'Points, Longitude, Latitude', 'Point')} 
-        />
-      }
-      {showSavedZones && savedZonesArray.length > 0 && 
-        <div>
-          <Divider />
-          <List sx={{ maxHeight: '15rem', overflow: 'auto'}}>
-            {savedZonesArray.map((zone) => {
-              return (
-                <IconMenuListItem 
-                  key={zone?.properties?.name}
-                  text={zone?.properties?.name} 
-                  onClick={() => checkSavedZone(zone)} 
-                  onIconClick={() => store.removeSavedZone(zone.id, zone.properties.name)}
-                  selected={drawFeatureID === zone?.id && store.selectedSavedZone?.properties?.name === zone?.properties?.name} 
-                />
-              )
-            })}
-          </List>
-        </div>
-      }
+      <div>
+        {(currentSelectedZone && drawFeatureID) && 
+          <DownloadCSV 
+            buttonText='Download Coordinates'
+            fileName={currentSelectedZone.properties.fileName} 
+            data={convertToCSV(currentSelectedZone.geometry.coordinates, 'Points, Longitude, Latitude', 'Point')} 
+          />
+        }
+        <List>
+          {menuOptions.map(text => (
+            <MenuListItem key={text} text={text} onClick={() => toggleMenuOptions(text)} disabled={text === 'Save Zone' ? !drawFeatureID : Object.keys(savedZones).length === 0}/>
+          ))}
+        </List>
+        {showSavedZones && Object.keys(savedZones).length > 0 && 
+          <div>
+            <Divider />
+            <List sx={{ maxHeight: '22rem', overflow: 'auto'}}>
+              {Object.values(savedZones).map((zone) => {
+                return (
+                  <IconMenuListItem 
+                    key={zone?.properties?.name}
+                    text={zone?.properties?.name} 
+                    onClick={() => checkSavedZone(zone)} 
+                    onIconClick={() => store.removeSavedZone(zone.properties.name)}
+                    selected={drawFeatureID === zone?.id && store.selectedSavedZone?.properties?.name === zone?.properties?.name} 
+                  />
+                )
+              })}
+            </List>
+          </div>
+        }
+      </div>
       <div>
         <Divider />
-        <h2>Available Zones</h2>
+        <p className='zonesTitle'>Zones</p>
         <List>
           {drawnZoneOptions.map((text) => (
             <MenuListItem key={text} text={text} selected={text === selectedZone} onClick={() => handleZoneSelection(text)} />

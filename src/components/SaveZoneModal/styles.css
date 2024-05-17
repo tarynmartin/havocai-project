@@ -13,3 +13,8 @@
 .coordinates {
   padding-left: 1rem;
 }
+
+.terminalAreaWarning {
+  color: #d50606;
+  font-size: 0.75rem;
+}

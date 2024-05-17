@@ -24,7 +24,6 @@ export default class Store {
       addSavedZone: action,
       removeSavedZone: action,
       setSelectedSavedZone: action,
-      findSavedZone: action
     });
   }
 
@@ -63,19 +62,22 @@ export default class Store {
 
   addSavedZone(zone) {
     const newZone = {...this.savedZones};
+    let isSaved;
 
-    if (!this.savedZones[zone.id]) {
-      newZone[zone.id] = {[zone.properties.name]: zone};
+    if (!this.savedZones[zone.properties.name]) {
+      newZone[zone.properties.name] = zone;
+      isSaved = true;
     } else {
-      newZone[zone.id] = {...newZone[zone.id], [zone.properties.name]: zone};
+      isSaved = false;
     }
 
     this.selectedSavedZone = zone;
     this.savedZones = newZone;
+    return isSaved;
   }
   
-  removeSavedZone(id, name) {
-    delete this.savedZones[id][name];
+  removeSavedZone(name) {
+    delete this.savedZones[name];
     this.displaySavedZones = false;
     this.drawFeatureID = null;
   }
@@ -84,9 +86,5 @@ export default class Store {
     this.selectedSavedZone = zone;
     this.drawFeatureID = zone.id;
     this.displaySavedZones = true;
-  }
-
-  findSavedZone(id, name) {
-    return this.savedZones[id][name];
   }
 }
