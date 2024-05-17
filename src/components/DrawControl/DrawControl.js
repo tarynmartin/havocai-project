@@ -20,6 +20,7 @@ const DrawControl = observer(function DrawControl(props) {
     () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
     ({ map }) => {
       map.on('draw.create', (e) => {
+        console.log('store?', !store.features)
         e.features[0].properties.area = store.action
         if (store.drawFeatureID !== e.features[0].id) {
           store.setFeatures(e);

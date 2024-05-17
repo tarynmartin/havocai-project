@@ -22,7 +22,7 @@ const MainMap = observer(() => {
 
   useEffect(() => {
     if (!displaySavedZones) return;
-    ;
+    
     selectedSavedZone.geometry.type = 'Polygon';
 
     const JSONObject = {
@@ -91,7 +91,6 @@ const MainMap = observer(() => {
             paint={{ 'text-color': '#000000' }}
           />
         </Source>
-        // TODO: add ability to interact w/the saved zones 
       }
       {!displaySavedZones && 
          <Source id="geojson" type="geojson" data={drawnFeatures}>
