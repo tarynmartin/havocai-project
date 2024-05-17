@@ -4,8 +4,9 @@ export default class Store {
   drawFeatureID = '';
   features = {};
   action = ''
-  savedZones = [];
+  savedZones = {};
   displaySavedZones = false;
+  selectedSavedZone = null;
 
   constructor() {
     makeAutoObservable(this, {
@@ -14,11 +15,16 @@ export default class Store {
       action: observable,
       savedZones: observable,
       displaySavedZones: observable,
+      selectedSavedZone: observable,
       setAction: action,
       addFeatureID: action,
+      getFeature: action,
       setFeatures: action,
       deleteFeatures: action,
       addSavedZone: action,
+      removeSavedZone: action,
+      setSelectedSavedZone: action,
+      findSavedZone: action
     });
   }
 
@@ -36,6 +42,7 @@ export default class Store {
 
   setFeatures(e) {
     const newFeatures = {...this.features};
+
     for (const f of e.features) {
       newFeatures[f.id] = f;
     }
@@ -55,23 +62,31 @@ export default class Store {
   }
 
   addSavedZone(zone) {
-    if (!this.savedZones.find((savedZone) => savedZone.id === zone.id)) {
-      this.savedZones.push(zone);
-    }
-  }
+    const newZone = {...this.savedZones};
 
-  getSavedZone(id) {
-    return this.savedZones.find((zone) => zone.id === id);
+    if (!this.savedZones[zone.id]) {
+      newZone[zone.id] = {[zone.properties.name]: zone};
+    } else {
+      newZone[zone.id] = {...newZone[zone.id], [zone.properties.name]: zone};
+    }
+
+    this.selectedSavedZone = zone;
+    this.savedZones = newZone;
   }
   
-  removeSavedZone(id) {
-    const newSavedZones = this.savedZones.filter((zone) => zone.id !== id);
-    this.savedZones = newSavedZones;
+  removeSavedZone(id, name) {
+    delete this.savedZones[id][name];
     this.displaySavedZones = false;
     this.drawFeatureID = null;
   }
 
-  setDisplaySavedZones(state) {
-    this.displaySavedZones = state;
+  setSelectedSavedZone(zone) {
+    this.selectedSavedZone = zone;
+    this.drawFeatureID = zone.id;
+    this.displaySavedZones = true;
+  }
+
+  findSavedZone(id, name) {
+    return this.savedZones[id][name];
   }
 }

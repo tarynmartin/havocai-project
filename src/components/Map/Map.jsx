@@ -17,22 +17,21 @@ const MainMap = observer(() => {
     type: 'FeatureCollection',
     features: [{type: 'Feature', properties: {area: store.action}}]
   }
-  const { displaySavedZones, action } = store;
+  const { displaySavedZones, action, selectedSavedZone } = store;
   const [drawnFeatures, setDrawnFeatures] = useState(GeoJSON);
 
   useEffect(() => {
     if (!displaySavedZones) return;
-    
-    const savedZone = store.getSavedZone(store.drawFeatureID);
-    savedZone.geometry.type = 'Polygon';
+    ;
+    selectedSavedZone.geometry.type = 'Polygon';
 
     const JSONObject = {
       type: 'FeatureCollection',
-      features: [savedZone]
+      features: [selectedSavedZone]
     }
 
     setDrawnFeatures(JSONObject);
-  }, [displaySavedZones])
+  }, [displaySavedZones, selectedSavedZone])
 
   const findStyles = useMemo(() => {
     switch(action) {
@@ -59,7 +58,7 @@ const MainMap = observer(() => {
         mapStyle="mapbox://styles/mapbox/satellite-v9"
         onRender={(e) => e.target.resize()}
     >
-      {displaySavedZones && 
+      {(displaySavedZones && drawnFeatures) && 
         <Source id="saved zone" type="geojson" data={drawnFeatures}>
           <Layer 
             id="saved zone"
