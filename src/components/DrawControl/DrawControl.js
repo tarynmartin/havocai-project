@@ -17,7 +17,7 @@ const DrawControl = observer(function DrawControl(props) {
   }
 
   useControl(
-    () => new MapboxDraw({...{ userProperties: true }, ...props, ...defaultProps}),
+    () => new MapboxDraw({...{ styles: props.currentStyle, userProperties: true }, ...props, ...defaultProps}),
     ({ map }) => {
       map.on('draw.create', (e) => {
         e.features[0].properties.area = store.action
