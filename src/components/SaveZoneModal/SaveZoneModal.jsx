@@ -44,7 +44,7 @@ const SaveZoneModal = observer(({ open, handleClose }) => {
   }
 
   const onSave = () => {
-    const savedFeature = {...zoneData, properties: {...zoneData.properties, name: zoneName, notes: zoneNotes}};
+    const savedFeature = {...zoneData, properties: {...zoneData?.properties, name: zoneName, notes: zoneNotes}};
 
     const response = store.addSavedZone(savedFeature)
 
@@ -78,6 +78,7 @@ const SaveZoneModal = observer(({ open, handleClose }) => {
             Please enter a name for the zone
           </DialogContentText>
           <TextField
+            inputProps={{ "data-testid": "name-input" }}
             autoFocus
             margin="dense"
             id="zone-name"

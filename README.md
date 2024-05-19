@@ -14,6 +14,7 @@ Additional Extension: export drawn zones as a CSV
 - git clone the repo locally
 - Run ```npm i``` in your CLI
 - Run ```npm run dev``` and in the browser, navigate to [http://localhost:5173/](http://localhost:5173/) to interact with the application
+- To run unit tests, enter ```npm run test``` in your CLI
 
 ## Current Issues
 - Currently unable to interact/edit a saved zone when you've clicked on the zone from the saved zones list
@@ -25,6 +26,7 @@ Additional Extension: export drawn zones as a CSV
 - Able to change the map’s viewstate(latitude & longitude)
 - Show the latitude and longitude when map is created
 - Show the latitude and longitude when saved map is displayed
+- Add additional unit tests, and add integration and end to end testing
 
 ## Changes with a Backend/API
 This app is run completely on the client side, and I would change the handling of the coordinates if I were to use a backend. These changes would be:
