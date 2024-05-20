@@ -12,6 +12,9 @@ Additional Extension: export drawn zones as a CSV
 
 ## Deployed App
 [https://havocai-project.onrender.com/](https://havocai-project.onrender.com/)
+- To start drawing a polygon, select one of the zones on the bottom of the side bar
+- To stop drawing a polygon, right click most recent point or hit enter
+- To see coordinates, either download a CSV or open your dev console and the information for your polygon will be printed. The CSV only displays the points, while the dev console return has the whole GeoJSON object. 
 
 ## To Run
 - git clone the repo locally
