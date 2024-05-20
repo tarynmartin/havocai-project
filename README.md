@@ -16,7 +16,7 @@ Additional Extension: export drawn zones as a CSV
 ## To Run
 - git clone the repo locally
 - Run ```npm i``` in your CLI
-- If you want to run locally, you need to add an API token from [https://www.mapbox.com/](Mapbox). Create a .env file in the root directory and create a variable named ```VITE_MAPBOX_KEY``` with the value being your Mapbox API token.
+- If you want to run locally, you need to add an API token from [Mapbox](https://www.mapbox.com/). Once you have your token, create a .env file in the root directory and create a variable named ```VITE_MAPBOX_KEY``` with the value being your Mapbox API token.
 - Run ```npm run dev``` and in the browser, navigate to [http://localhost:5173/](http://localhost:5173/) to interact with the application
 - To run unit tests, enter ```npm run test``` in your CLI
 
