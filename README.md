@@ -10,9 +10,13 @@ Extension 3: When a user switches types of polygon or starts to draw a new one, 
 
 Additional Extension: export drawn zones as a CSV
 
+## Deployed App
+[https://havocai-project.onrender.com/](https://havocai-project.onrender.com/)
+
 ## To Run
 - git clone the repo locally
 - Run ```npm i``` in your CLI
+- If you want to run locally, you need to add an API token from [https://www.mapbox.com/](Mapbox). Create a .env file in the root directory and create a variable named ```VITE_MAPBOX_KEY``` with the value being your Mapbox API token.
 - Run ```npm run dev``` and in the browser, navigate to [http://localhost:5173/](http://localhost:5173/) to interact with the application
 - To run unit tests, enter ```npm run test``` in your CLI
 
@@ -21,7 +25,7 @@ Additional Extension: export drawn zones as a CSV
 - If a zone is saved, but the user moves it & saves again, they’ll keep the same ID, but use the saved name of the zone to differentiate between the two; would prefer for the ID to change
 - Unable to change the color of the zones using the built in methods for Mapbox Draw
 
-## Future Extensions
+## Possible Future Iterations
 - Solve the issues that exist
 - Able to change the map’s viewstate(latitude & longitude)
 - Show the latitude and longitude when map is created
